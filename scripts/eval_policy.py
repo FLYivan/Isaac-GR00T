@@ -73,10 +73,13 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+
+    # 获取数据配置
     data_config = DATA_CONFIG_MAP[args.data_config]
     if args.model_path is not None:
         import torch
 
+        # 获取模态配置和转换
         modality_config = data_config.modality_config()
         modality_transform = data_config.transform()
 
@@ -97,7 +100,7 @@ if __name__ == "__main__":
     modality = policy.get_modality_config()
     print(modality)
 
-    # Create the dataset
+    # 这是一个LeRobotSingleDataset对象，从给定的数据集路径加载数据
     dataset = LeRobotSingleDataset(
         dataset_path=args.dataset_path,
         modality_configs=modality,

@@ -39,7 +39,7 @@ if __name__ == "__main__":
         "--data_config",
         type=str,
         help="The name of the data config to use.",
-        choices=list(DATA_CONFIG_MAP.keys()),
+        choices=list(DATA_CONFIG_MAP.keys()),           #  这个选项限制了用户可以输入的值，只有在 DATA_CONFIG_MAP 字典的键中存在的值才是有效的
         default="gr1_arms_waist",
     )
 
@@ -106,15 +106,35 @@ if __name__ == "__main__":
         # - action: action.left_hand: (16, 6)
         # - action: action.right_hand: (16, 6)
         # - action: action.waist: (16, 3)
-        obs = {
-            "video.ego_view": np.random.randint(0, 256, (1, 256, 256, 3), dtype=np.uint8),
-            "state.left_arm": np.random.rand(1, 7),
-            "state.right_arm": np.random.rand(1, 7),
-            "state.left_hand": np.random.rand(1, 6),
-            "state.right_hand": np.random.rand(1, 6),
-            "state.waist": np.random.rand(1, 3),
-            "annotation.human.action.task_description": ["do your thing!"],
-        }
+
+        # 扩展支持的机器人平台
+        # 针对傅利叶GR1
+        if args.embodiment_tag == "gr1" :
+            obs = {
+                "video.ego_view": np.random.randint(0, 256, (1, 256, 256, 3), dtype=np.uint8),
+                "state.left_arm": np.random.rand(1, 7),
+                "state.right_arm": np.random.rand(1, 7),
+                "state.left_hand": np.random.rand(1, 6),
+                "state.right_hand": np.random.rand(1, 6),
+                "state.waist": np.random.rand(1, 3),
+                "annotation.human.action.task_description": ["do your thing!"],
+            }
+
+        # 针对宇数G1
+        elif args.embodiment_tag == "g1" :
+            obs = {
+                "video.cam_right_high": np.random.randint(0, 256, (1, 256, 256, 3), dtype=np.uint8),
+                "video.cam_left_wrist": np.random.randint(0, 256, (1, 256, 256, 3), dtype=np.uint8),
+                "video.cam_right_wrist": np.random.randint(0, 256, (1, 256, 256, 3), dtype=np.uint8),
+                "state.left_arm": np.random.rand(1, 7),
+                "state.right_arm": np.random.rand(1, 7),
+                "state.left_hand": np.random.rand(1, 7),
+                "state.right_hand": np.random.rand(1, 7),
+                "annotation.human.task_description": ["do your thing!"],
+            }
+
+
+        # 运行推理
         action = policy_client.get_action(obs)
 
         for key, value in action.items():

@@ -22,6 +22,11 @@ class EmbodimentTag(Enum):
     The GR1 dataset.
     """
 
+    G1 = "g1"
+    """
+    The Unitree G1 dataset.
+    """
+
     NEW_EMBODIMENT = "new_embodiment"
     """
     Any new embodiment for finetuning.
